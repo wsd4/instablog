@@ -1,4 +1,5 @@
 from django.db import models
+from django.db.models import Avg, Count, Max, Min, Sum
 
 
 class Post(models.Model):
@@ -14,6 +15,17 @@ class Post(models.Model):
 
     def __str__(self):
         return '<Post {}: "{}">'.format(self.pk, self.title[:8])
+
+
+    @staticmethod
+    def get_posts_with_comment():
+
+        qs = Post.objects.annotate(
+            comment_count=Count('comment')
+        )
+        result = qs.filter(comment_count__gte=1)
+
+        return result
 
 
 class Comment(models.Model):
