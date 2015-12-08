@@ -1,0 +1,26 @@
+{% comment "TODO" %}
+전체 글 수와 페이지 넘버를 보여준다.
+{% endcomment %}
+
+{% for post in posts %}
+    <div class="post_container">
+
+        <h3 class="post_title">
+            <a href="{% url 'blog:view_post' post.pk %}">{{ forloop.counter }}. {{ post.title }}</a>
+        </h3>
+
+        <div class="post_contents">{{ post.contents}}</div>
+        <div>
+            <p><span>글 갈래</span> {{ post.category.name }}</p>
+            <p><span>작성일시</span> {{ post.created_at }}</p>
+        </div>
+    </div>
+{% empty %}
+    <p>글이 하나도 없습니다.</p>
+{% endfor %}
+
+<hr />
+
+<p>
+    <a href="{% url 'blog:create_post' %}">글 쓰기</a>
+</p>
