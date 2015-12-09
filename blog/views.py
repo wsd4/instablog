@@ -96,7 +96,7 @@ def delete_post(request, pk):
     if request.method == 'POST':
         post.delete()
 
-        return redirect('blog:list_post')
+        return redirect('blog:list_posts')
 
     elif request.method == 'GET':
 
