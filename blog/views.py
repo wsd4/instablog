@@ -3,29 +3,56 @@ from django.shortcuts import redirect
 from django.shortcuts import get_object_or_404
 from django.core.urlresolvers import reverse
 
+from django.core.paginator import Paginator
+from django.core.paginator import EmptyPage
+from django.core.paginator import PageNotAnInteger
+
+
 from .models import Post
 from .models import Category
 from .models import Tag
 from .models import Comment
 
 
+
+
 def list_posts(request):
 
-    try:
-        page = int(request.GET['page'])
-        if page < 1:
-            page = 1
-    except Exception:
-        page = 1
-
+    page_number = request.GET.get('page', 1)
     per_page = 5
 
-    #posts = Post.objects.order_by('-created_at')[page-1:page*per_page]
     posts = Post.objects.order_by('-created_at')
+    pg = Paginator(posts, per_page)
+
+    try:
+        contents = pg.page(page_number)
+    except PageNotAnInteger:
+        contents = pg.page(1)
+    except EmptyPage:
+        contents = []
 
     return render(request, 'list.html', {
-        'posts': posts,
+        'posts': contents,
     })
+
+
+# def list_posts(request):
+#
+#     try:
+#         page = int(request.GET['page'])
+#         if page < 1:
+#             page = 1
+#     except Exception:
+#         page = 1
+#
+#     per_page = 5
+#
+#     #posts = Post.objects.order_by('-created_at')[page-1:page*per_page]
+#     posts = Post.objects.order_by('-created_at')
+#
+#     return render(request, 'list.html', {
+#         'posts': posts,
+#     })
 
 
 def view_post(request, pk):
@@ -103,4 +130,6 @@ def delete_post(request, pk):
         return render(request, 'delete.html', {
             'post': post
         })
+
+
 
