@@ -1,38 +1,64 @@
+{% extends 'blog_layout.html' %}
+{% load bootstrap3 %}
+
+{% block page_title %}글 작성{% endblock %}
+
+
+{% block body %}
+
+<div class="container">
+
 {% if post %}
 <h3>{{ post.title }} 고치기</h3>
+{% else %}
+<h3>글 쓰기</h3>
 {% endif %}
 
 
-<form method="POST" action="">
+<form method="POST" action="" class="form-horizontal" role="form">
     {% csrf_token %}
+    {# {% bootstrap_form form %} #}
 
+    <div class="form-group">
+        <label class="control-label col-sm-2" for="category">글 갈래:</label>
+        <div class="col-sm-10">
+            <select name="category" class="form-control" id="category">
+            {% for category in categories %}
+                <option value="{{ category.pk }}"
+                    {% if post.category.pk == category.pk %}selected{% endif %}>
+                    {{ category.name }}
+                </option>
+            {% endfor %}
+            </select>
+        </div>
+    </div>
 
-    <fieldset>
-        <legend>Post 쓰기</legend>
-        <p>
-            <label>글 갈래:
-                <select name="category">
-                {% for category in categories %}
-                    <option value="{{ category.pk }}"
-                        {% if post.category.pk == category.pk %}selected{% endif %}>
-                        {{ category.name }}
-                    </option>
-                {% endfor %}
-                </select>
-            </label>
-        </p>
+    <div class="form-group">
+        <label class="control-label col-sm-2" for="title">제목:</label>
+        <div class="col-sm-10">
+            <input type="text" name="title" value="{{ post.title }}"
+                class="form-control" placeholder="글 제목" id="title" />
+        </div>
+    </div>
 
-        <p>
-            <label>제목:</label>
-            <input type="text" name="title" value="{{ post.title }}"/>
-        </p>
+    <div class="form-group">
+        <label class="control-label col-sm-2" for="content">내용:</label>
+        <div class="col-sm-10">
+            <textarea name="content" class="form-control" rows="10" id="content">
+                {{ post.content }}
+            </textarea>
+        </div>
+    </div>
 
-        <p>
-            <label>내용:</label>
-            <textarea name="content">{{ post.content }}</textarea>
-        </p>
-    </fieldset>
-
-    <p><input type="submit" value="저장" /></p>
-
+    <div class="form-group">
+        <div class="col-sm-offset-2 col-sm-5">
+            <button type="submit" class="btn btn-primary">
+                {% bootstrap_icon "star" %} 저장
+            </button>
+        </div>
+    </div>
 </form>
+
+</div>
+
+{% endblock %}

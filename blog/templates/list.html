@@ -1,6 +1,17 @@
+{% extends 'blog_layout.html' %}
+
+{% load bootstrap3 %}
+
+{% block page_title %}블로그 목록{% endblock %}
+
+
+{% block body %}
+
+
 {% comment "TODO" %}
 전체 글 수와 페이지 넘버를 보여준다.
 {% endcomment %}
+
 
 {% for post in posts %}
     <div class="post_container">
@@ -19,6 +30,10 @@
     <p>글이 하나도 없습니다.</p>
 {% endfor %}
 
+<hr />
+{% bootstrap_pagination posts %}
+
+{% comment %}
 {% if posts.has_previous %}
 <span><a href="?page={{ posts.previous_page_number }}">이전 쪽</a></span>
 {% endif %}
@@ -28,9 +43,15 @@
 {% if posts.has_next %}
 <span><a href="?page={{ posts.next_page_number }}">다음 쪽</a></span>
 {% endif %}
+{% endcomment %}
+
 
 <hr />
 
 <p>
     <a href="{% url 'blog:create_post' %}">글 쓰기</a>
 </p>
+
+
+
+{% endblock %}
