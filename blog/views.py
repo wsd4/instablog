@@ -15,6 +15,11 @@ from .models import Comment
 
 
 
+def index(request):
+
+    url = reverse('blog:list_posts')
+
+    return redirect(url)
 
 def list_posts(request):
 
@@ -131,5 +136,19 @@ def delete_post(request, pk):
             'post': post
         })
 
+def delete_comment(request, post_pk, comment_pk):
 
+    post = get_object_or_404(Post, pk=post_pk)
+    comment = get_object_or_404(Comment, pk=comment_pk)
 
+    if request.method == 'POST':
+        comment.delete()
+
+        return redirect('blog:view_post', pk=post_pk)
+
+    elif request.method == 'GET':
+
+        return render(request, 'delete_comment.html', {
+            'post': post,
+            'comment': comment,
+        })
