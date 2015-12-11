@@ -1,17 +1,24 @@
+{% extends 'blog_layout.html' %}
 {% load bootstrap3 %}
 
 
+{% block page_title %}Post 삭제 확인{% endblock %}
+
+{% block body %}
+
 <h3>{{ post.title }} 삭제 확인</h3>
 
-<form method="POST" action="">
+<form method="POST" action="" class="form">
     {% csrf_token %}
 
     <p>
         정말로 지우시겠습니까?
     </p>
-    <p>
-        <input type="submit" value="삭제" />
-    </p>
 
+    <div class="form-group">
+        <input type="submit" value="삭제" class="btn btn-primary" />
+    </div>
 
 </form>
+
+{% endblock %}
