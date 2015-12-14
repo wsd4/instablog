@@ -7,8 +7,10 @@ from django.core.paginator import Paginator
 from django.core.paginator import EmptyPage
 from django.core.paginator import PageNotAnInteger
 
+from django import forms
 
 from .models import Post
+from .forms import PostNormalForm
 from .models import Category
 from .models import Tag
 from .models import Comment
@@ -71,24 +73,30 @@ def view_post(request, pk):
 def create_post(request):
 
     if request.method == 'GET':
+
+        form = PostNormalForm()
         categories = Category.objects.all()
         context = {
+            'form': form,
             'categories': categories,
         }
+
     elif request.method == 'POST':
 
+        category = get_object_or_404(Category, pk=request.POST['category'])
         form = request.POST
-        category = get_object_or_404(Category, pk=form['category'])
-        post = Post(
-            title=form['title'],
-            content=form['content'],
-            category=category,
-        )
-        post.full_clean()
-        post.save()
-        url = reverse('blog:view_post', kwargs={'pk': post.pk})
 
-        return redirect(url)
+        if form.is_valid():
+            post = Post(
+                title=form['title'],
+                content=form['content'],
+                category=category,
+            )
+            post.full_clean()
+            post.save()
+            url = reverse('blog:view_post', kwargs={'pk': post.pk})
+
+            return redirect(url)
 
     return render(request, 'edit.html', context)
 
@@ -152,3 +160,6 @@ def delete_comment(request, post_pk, comment_pk):
             'post': post,
             'comment': comment,
         })
+
+
+

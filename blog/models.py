@@ -28,6 +28,7 @@ class Post(models.Model):
         return result
 
 
+
 class Comment(models.Model):
 
     post = models.ForeignKey(Post)
